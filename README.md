@@ -1,88 +1,135 @@
-# MediSource — Medical Equipment Marketplace (Demo)
+# MediSource — Medical Equipment Marketplace
 
-A full-stack clone-style project inspired by medical-equipment marketplaces
-like Medikabazaar: a product catalog, cart & checkout, customer accounts, and
-an admin console for managing products and orders.
+A full-stack medical equipment marketplace application for browsing, purchasing, and managing medical products.
+
+MediSource includes a product catalog, shopping cart, checkout system, customer accounts, order management, and an admin console.
 
 ## Stack
 
-- **Backend:** Node.js + Express, JWT auth, in-memory data store (`backend/db.js`)
-- **Frontend:** Plain HTML/CSS/JS (no build step), served statically by Express
+- **Backend:** Node.js + Express
+- **Authentication:** JWT + bcryptjs
+- **Database:** Snowflake Cloud Database
+- **Database Driver:** Snowflake SDK for Node.js
+- **Frontend:** HTML, CSS, JavaScript
+- **API:** REST API
 
-> The data store is in-memory for simplicity — restarting the server resets
-> products/users/orders back to the seed data. Every route only talks to the
-> functions in `backend/db.js`, so swapping in a real database (Postgres,
-> MongoDB, SQLite) later means rewriting that one file.
+## Architecture
 
-## Getting started
+```text
+Frontend
+    |
+    v
+Express REST API
+    |
+    v
+Snowflake SDK
+    |
+    v
+Snowflake Cloud Database
+    |
+    +---- USERS
+    +---- PRODUCTS
+    +---- CATEGORIES
+    +---- CART
+    +---- ORDERS
+    +---- ORDER_ITEMS
+Features
+Product catalog
+Product search and categories
+Shopping cart
+User registration and login
+JWT authentication
+Checkout and order management
+Customer order history
+Admin dashboard
+Product CRUD operations
+Snowflake persistent data storage
+Database
+MediSource uses Snowflake Cloud Database for persistent application data.
+Main Tables
+Table	Purpose
+USERS	Customer and admin accounts
+PRODUCTS	Medical equipment products
+CATEGORIES	Product categories
+CART	User shopping carts
+ORDERS	Customer orders
+ORDER_ITEMS	Products included in orders
 
-Requires [Node.js](https://nodejs.org) 18+.
 
-```bash
+Local Setup
+Requirements
+Node.js 18+
+Snowflake account
+Snowflake database
+Snowflake warehouse
+Git
+Install
 cd backend
 npm install
+Environment Variables
+Create a .env file inside the backend directory:
+SNOWFLAKE_ACCOUNT=your_account
+SNOWFLAKE_USERNAME=your_username
+SNOWFLAKE_PASSWORD=your_password
+SNOWFLAKE_WAREHOUSE=your_warehouse
+SNOWFLAKE_DATABASE=your_database
+SNOWFLAKE_SCHEMA=your_schema
+SNOWFLAKE_ROLE=your_role
+Important: Never upload your .env file or Snowflake credentials to GitHub.
+Add the following to .gitignore:
+.env
+node_modules/
+Run
 npm start
-```
-
-Then open **http://localhost:4000** in your browser. The Express server
-serves both the API (`/api/...`) and the frontend from the same port, so
-there's nothing else to run.
-
-### Demo admin login
-- Email: `admin@medisource.test`
-- Password: `admin123`
-
-Or register a new account from the Sign In page — new accounts are regular
-customers by default.
-
-## Project structure
-
-```
-medisource/
-├── backend/
-│   ├── server.js          # Express app entry point
-│   ├── db.js               # In-memory data + seed products/categories
-│   ├── middleware/auth.js  # JWT verification, admin guard
-│   └── routes/
-│       ├── auth.js         # POST /api/auth/register, /login
-│       ├── products.js     # GET /api/products, /api/categories
-│       ├── cart.js         # GET/POST/PUT/DELETE /api/cart (auth required)
-│       ├── orders.js       # POST /api/orders/checkout, GET /api/orders (auth)
-│       └── admin.js        # Product CRUD + stats (admin only)
-└── frontend/
-    ├── index.html           # Catalog with search/filter/sort
-    ├── product.html         # Product detail page
-    ├── cart.html            # Cart
-    ├── checkout.html        # Shipping + payment method + place order
-    ├── order-confirmation.html
-    ├── orders.html          # Order history
-    ├── login.html / register.html
-    ├── admin.html           # Admin console (dashboard, products, orders)
-    ├── css/style.css
-    └── js/                  # One JS file per page + shared api.js
-```
-
-## Features included
-
-- **Catalog:** search, category filters, price range, sorting, stock badges
-- **Product detail page:** spec table, quantity stepper, add to cart / buy now
-- **Cart & checkout:** persistent per-user cart, shipping address form, order placement
-- **Accounts:** register/login with JWT, order history
-- **Admin console:** dashboard stats, full product CRUD (create/edit/delete), order list — protected by an `admin` role check both in the UI and on every backend route
-
-## Extending this
-
-- **Persistence:** replace `backend/db.js` with a real database client
-- **Payments:** the checkout form has a payment-method selector but doesn't
-  call a real payment gateway — wire in Stripe/Razorpay in `routes/orders.js`
-- **Images:** products currently render as emoji icons (`iconFor()` in
-  `frontend/js/api.js`) — swap in real product photos by adding an `imageUrl`
-  field
-- **Roles:** only `customer` and `admin` roles exist; a `vendor` role with
-  scoped product ownership would be a natural next step
-
-## Notes
-
-This is an original demo build inspired by the *category* of product
-(a B2B medical-equipment marketplace) — it does not reuse any code, design,
-or copy from any existing website.
+The application will be available at:
+http://localhost:4000
+API Endpoints
+Authentication
+POST /api/auth/register
+POST /api/auth/login
+Products
+GET /api/products
+GET /api/products/:id
+GET /api/categories
+Cart
+GET    /api/cart
+POST   /api/cart/items
+PUT    /api/cart/items/:productId
+DELETE /api/cart/items/:productId
+Orders
+POST /api/orders/checkout
+GET  /api/orders
+GET  /api/orders/:id
+Health Check
+GET /api/health
+Deployment
+The application can be deployed as a Node.js/Express application on cloud hosting platforms such as Render, Railway, or other Node.js-compatible platforms.
+Required Environment Variables
+SNOWFLAKE_ACCOUNT
+SNOWFLAKE_USERNAME
+SNOWFLAKE_PASSWORD
+SNOWFLAKE_WAREHOUSE
+SNOWFLAKE_DATABASE
+SNOWFLAKE_SCHEMA
+SNOWFLAKE_ROLE
+Start Command
+npm start
+The application uses the hosting platform's PORT environment variable.
+const PORT = process.env.PORT || 4000;
+Security
+Passwords are hashed using bcrypt.
+Authentication uses JWT.
+Admin routes are protected using role-based authorization.
+Snowflake credentials are stored using environment variables.
+.env and sensitive credentials must not be committed to GitHub.
+Future Improvements
+Razorpay or Stripe payment integration
+Real product image hosting
+Vendor accounts and vendor management
+Advanced Snowflake analytics
+Inventory analytics
+AI-based product recommendations
+Demand forecasting
+Business intelligence dashboards
+Project Purpose
+MediSource is an educational full-stack project demonstrating how a medical equipment marketplace can be built using Node.js, Express, JavaScript, JWT authentication, and Snowflake Cloud Database.
