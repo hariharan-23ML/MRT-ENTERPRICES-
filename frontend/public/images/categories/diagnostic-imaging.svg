@@ -1,0 +1,16 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <defs>
+    <linearGradient id="bg_diagnostic-imaging" x1="0" y1="0" x2="120" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#4f46e5" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="100" rx="14" fill="url(#bg_diagnostic-imaging)"/>
+
+            <rect x="24" y="18" width="72" height="52" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="3" />
+            <ellipse cx="60" cy="44" rx="24" ry="16" fill="none" stroke="#a5b4fc" stroke-width="2.5" stroke-dasharray="4 3" />
+            <circle cx="60" cy="44" r="8" fill="#6366f1" opacity="0.6" />
+            <path d="M60 70 V85 M45 85 H75" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" />
+            <rect x="78" y="58" width="16" height="28" rx="4" fill="#3b82f6" transform="rotate(25 78 58)" />
+
+</svg>

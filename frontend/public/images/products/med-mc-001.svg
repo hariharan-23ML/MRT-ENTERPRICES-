@@ -1,0 +1,35 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_mc_001" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_mc_001" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#65a30d" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#a3e635" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_mc_001)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_mc_001)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#65a30d" text-anchor="middle">CAT-11</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Nitrile Examination Gloves -->
+    <rect x="80" y="55" width="100" height="75" rx="6" fill="#f8fafc" stroke="#65a30d" stroke-width="2.5"/>
+    <ellipse cx="130" cy="88" rx="28" ry="14" fill="#a3e635" opacity="0.3"/>
+    <path d="M175 90 C190 75 220 75 225 100 C230 115 210 135 190 140 Z" fill="#65a30d" opacity="0.85" stroke="#4d7c0f" stroke-width="2"/>
+    <path d="M190 90 L195 70 M202 90 L210 65 M214 95 L225 75" stroke="#4d7c0f" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Nitrile Examination Gloves</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-MC-001</text>
+</svg>

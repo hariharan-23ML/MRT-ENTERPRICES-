@@ -1,0 +1,14 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <defs>
+    <linearGradient id="bg_emergency-trauma" x1="0" y1="0" x2="120" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ef4444" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#dc2626" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="100" rx="14" fill="url(#bg_emergency-trauma)"/>
+
+            <rect x="25" y="28" width="70" height="52" rx="8" fill="#1e1b4b" stroke="#f87171" stroke-width="3" />
+            <path d="M60 40 V68 M46 54 H74" stroke="#ef4444" stroke-width="6" stroke-linecap="round" />
+            <path d="M46 28 C46 20 74 20 74 28" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" />
+
+</svg>

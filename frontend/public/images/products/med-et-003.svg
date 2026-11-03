@@ -1,0 +1,35 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_et_003" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_et_003" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#dc2626" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#f87171" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_et_003)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_et_003)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#dc2626" text-anchor="middle">CAT-10</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Bag-Valve-Mask Resuscitator (Ambu Bag) -->
+    <ellipse cx="145" cy="100" rx="45" ry="24" fill="#38bdf8" opacity="0.4" stroke="#0284c7" stroke-width="3"/>
+    <rect x="190" y="90" width="22" height="20" rx="3" fill="#475569"/>
+    <ellipse cx="230" cy="100" rx="16" ry="12" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+    <ellipse cx="85" cy="100" rx="16" ry="8" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Bag-Valve-Mask Resuscitator</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-ET-003</text>
+</svg>

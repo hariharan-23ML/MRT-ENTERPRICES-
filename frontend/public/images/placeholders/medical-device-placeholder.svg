@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none">
+  <rect width="200" height="160" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="60" y="40" width="80" height="60" rx="8" fill="#e0e7ff"/>
+  <path d="M100 55 V85 M85 70 H115" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/>
+  <text x="100" y="125" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Medical Equipment</text>
+</svg>

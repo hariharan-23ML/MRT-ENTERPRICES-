@@ -1,0 +1,42 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_su_002" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_su_002" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#0d9488" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#2dd4bf" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_su_002)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_su_002)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#0d9488" text-anchor="middle">CAT-04</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- LED Surgical Light -->
+    <path d="M160 25 V60" stroke="#64748b" stroke-width="6"/>
+    <path d="M160 60 L120 85 M160 60 L200 85" stroke="#64748b" stroke-width="5"/>
+    <ellipse cx="110" cy="95" rx="32" ry="14" fill="#0f172a" stroke="#0d9488" stroke-width="3"/>
+    <circle cx="100" cy="95" r="4" fill="#fef08a"/>
+    <circle cx="110" cy="95" r="4" fill="#fef08a"/>
+    <circle cx="120" cy="95" r="4" fill="#fef08a"/>
+    <ellipse cx="210" cy="95" rx="32" ry="14" fill="#0f172a" stroke="#0d9488" stroke-width="3"/>
+    <circle cx="200" cy="95" r="4" fill="#fef08a"/>
+    <circle cx="210" cy="95" r="4" fill="#fef08a"/>
+    <circle cx="220" cy="95" r="4" fill="#fef08a"/>
+    <path d="M90 109 L70 160 M130 109 L150 160" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="3 3"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">LED Surgical Light</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-SU-002</text>
+</svg>

@@ -1,0 +1,37 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_lb_005" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_lb_005" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#7c3aed" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_lb_005)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_lb_005)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#7c3aed" text-anchor="middle">CAT-05</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Laboratory Refrigerator -->
+    <rect x="105" y="35" width="110" height="145" rx="8" fill="#f8fafc" stroke="#7c3aed" stroke-width="3"/>
+    <rect x="118" y="48" width="84" height="115" rx="4" fill="#ede9fe" opacity="0.6" stroke="#7c3aed" stroke-width="1.5"/>
+    <line x1="118" y1="85" x2="202" y2="85" stroke="#7c3aed" stroke-width="2"/>
+    <line x1="118" y1="120" x2="202" y2="120" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="140" y="38" width="40" height="8" rx="2" fill="#0f172a"/>
+    <text x="160" y="44" font-family="sans-serif" font-size="7" fill="#22c55e" text-anchor="middle">4.0Â°C</text>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Laboratory Refrigerator</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-LB-005</text>
+</svg>

@@ -1,0 +1,40 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_id_001" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_id_001" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#d97706" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#fbbf24" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_id_001)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_id_001)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#d97706" text-anchor="middle">CAT-08</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Volumetric Infusion Pump -->
+    <rect x="105" y="45" width="110" height="120" rx="10" fill="#0f172a" stroke="#d97706" stroke-width="3.5"/>
+    <rect x="118" y="58" width="84" height="42" rx="4" fill="#1e293b"/>
+    <text x="160" y="82" font-family="sans-serif" font-size="14" font-weight="bold" fill="#22c55e" text-anchor="middle">125.0</text>
+    <text x="160" y="93" font-family="sans-serif" font-size="7" fill="#94a3b8" text-anchor="middle">mL / hr</text>
+    <path d="M105 120 H215" stroke="#d97706" stroke-width="3"/>
+    <circle cx="135" cy="142" r="6" fill="#22c55e"/>
+    <circle cx="160" cy="142" r="6" fill="#eab308"/>
+    <circle cx="185" cy="142" r="6" fill="#ef4444"/>
+    <path d="M160 45 V30 M160 165 V180" stroke="#64748b" stroke-width="3.5"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Volumetric Infusion Pump</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-ID-001</text>
+</svg>

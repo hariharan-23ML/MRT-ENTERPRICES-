@@ -1,0 +1,15 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <defs>
+    <linearGradient id="bg_laboratory-diagnostic" x1="0" y1="0" x2="120" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8b5cf6" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="100" rx="14" fill="url(#bg_laboratory-diagnostic)"/>
+
+            <path d="M50 18 H70 M56 18 V38 L36 78 C33 84 38 90 45 90 H75 C82 90 87 84 84 78 L64 38 V18" fill="#1e1b4b" stroke="#a78bfa" stroke-width="3" stroke-linejoin="round" />
+            <path d="M42 75 H78" stroke="#c084fc" stroke-width="2.5" />
+            <circle cx="54" cy="65" r="3" fill="#38bdf8" />
+            <circle cx="66" cy="70" r="4" fill="#38bdf8" />
+
+</svg>

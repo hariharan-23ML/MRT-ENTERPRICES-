@@ -1,0 +1,17 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <defs>
+    <linearGradient id="bg_hospital-furniture" x1="0" y1="0" x2="120" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="100" rx="14" fill="url(#bg_hospital-furniture)"/>
+
+            <rect x="22" y="44" width="76" height="14" rx="4" fill="#0284c7" />
+            <path d="M22 36 V68 M98 36 V68" stroke="#64748b" stroke-width="5" stroke-linecap="round" />
+            <rect x="26" y="32" width="22" height="12" rx="4" fill="#e2e8f0" />
+            <circle cx="22" cy="74" r="5" fill="#334155" />
+            <circle cx="98" cy="74" r="5" fill="#334155" />
+            <path d="M44 44 V34 H76 V44" stroke="#94a3b8" stroke-width="3" fill="none" />
+
+</svg>

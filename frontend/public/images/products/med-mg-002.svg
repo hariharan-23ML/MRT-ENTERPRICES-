@@ -1,0 +1,37 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_mg_002" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_mg_002" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#0369a1" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_mg_002)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_mg_002)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#0369a1" text-anchor="middle">CAT-12</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Oxygen Flowmeter with Humidifier Bottle -->
+    <rect x="145" y="35" width="28" height="65" rx="4" fill="#f8fafc" stroke="#0369a1" stroke-width="2.5"/>
+    <line x1="159" y1="45" x2="159" y2="88" stroke="#0284c7" stroke-width="2"/>
+    <circle cx="159" cy="65" r="4" fill="#ef4444"/>
+    <rect x="135" y="100" width="48" height="65" rx="8" fill="#38bdf8" opacity="0.3" stroke="#0284c7" stroke-width="2.5"/>
+    <path d="M140 140 Q159 135 178 140" stroke="#0284c7" stroke-width="2" fill="none"/>
+    <path d="M173 50 H195" stroke="#64748b" stroke-width="3"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Oxygen Flowmeter with Humidi...</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-MG-002</text>
+</svg>

@@ -1,0 +1,17 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <defs>
+    <linearGradient id="bg_general-medical" x1="0" y1="0" x2="120" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#059669" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="100" rx="14" fill="url(#bg_general-medical)"/>
+
+            <path d="M40 24 C40 45 80 45 80 24" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" />
+            <path d="M60 40 V65" stroke="#34d399" stroke-width="4" />
+            <circle cx="60" cy="74" r="12" fill="#0f172a" stroke="#34d399" stroke-width="3" />
+            <circle cx="60" cy="74" r="4" fill="#10b981" />
+            <circle cx="40" cy="22" r="4" fill="#64748b" />
+            <circle cx="80" cy="22" r="4" fill="#64748b" />
+
+</svg>

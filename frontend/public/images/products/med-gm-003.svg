@@ -1,0 +1,37 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_gm_003" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_gm_003" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#059669" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#34d399" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_gm_003)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_gm_003)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#059669" text-anchor="middle">CAT-09</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Professional Acoustic Stethoscope -->
+    <path d="M125 40 C125 75 195 75 195 40" fill="none" stroke="#059669" stroke-width="5" stroke-linecap="round"/>
+    <path d="M160 68 V125 C160 160 215 160 215 125" fill="none" stroke="#334155" stroke-width="4.5"/>
+    <circle cx="215" cy="120" r="16" fill="#cbd5e1" stroke="#059669" stroke-width="3"/>
+    <circle cx="215" cy="120" r="6" fill="#047857"/>
+    <circle cx="125" cy="38" r="4" fill="#0f172a"/>
+    <circle cx="195" cy="38" r="4" fill="#0f172a"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Professional Stethoscope</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-GM-003</text>
+</svg>

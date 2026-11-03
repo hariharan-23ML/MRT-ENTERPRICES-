@@ -1,0 +1,39 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_mc_002" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_mc_002" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#65a30d" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#a3e635" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_mc_002)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_mc_002)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#65a30d" text-anchor="middle">CAT-11</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Disposable Syringe 5 mL -->
+    <rect x="85" y="92" width="115" height="26" rx="4" fill="#ffffff" stroke="#65a30d" stroke-width="2.5"/>
+    <line x1="105" y1="92" x2="105" y2="105" stroke="#65a30d" stroke-width="2"/>
+    <line x1="125" y1="92" x2="125" y2="105" stroke="#65a30d" stroke-width="2"/>
+    <line x1="145" y1="92" x2="145" y2="105" stroke="#65a30d" stroke-width="2"/>
+    <line x1="165" y1="92" x2="165" y2="105" stroke="#65a30d" stroke-width="2"/>
+    <path d="M200 97 H255 M255 105 H200" stroke="#334155" stroke-width="2"/>
+    <rect x="255" y="92" width="6" height="26" fill="#334155"/>
+    <path d="M85 105 H50" stroke="#94a3b8" stroke-width="2.5"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Disposable Syringe 5 mL</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-MC-002</text>
+</svg>

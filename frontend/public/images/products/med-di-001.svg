@@ -1,0 +1,37 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+  <defs>
+    <linearGradient id="bg_med_di_001" x1="0" y1="0" x2="320" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <radialGradient id="glow_med_di_001" cx="50%" cy="40%" r="55%">
+      <stop stop-color="#4f46e5" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#818cf8" stop-opacity="0.01"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Base & Subtle Glow -->
+  <rect width="320" height="240" rx="16" fill="url(#bg_med_di_001)"/>
+  <rect width="320" height="240" rx="16" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="160" cy="95" r="85" fill="url(#glow_med_di_001)"/>
+
+  <!-- Category Pill Badge -->
+  <rect x="14" y="12" width="76" height="20" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#4f46e5" text-anchor="middle">CAT-02</text>
+
+  <!-- Product Silhouette Vector Graphic -->
+  <g id="illustration">
+    <!-- Portable Ultrasound Scanner with Probe -->
+    <rect x="80" y="45" width="110" height="85" rx="6" fill="#0f172a" stroke="#4f46e5" stroke-width="3"/>
+    <ellipse cx="135" cy="88" rx="35" ry="25" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" stroke-dasharray="4 2"/>
+    <path d="M70 130 H200 L210 148 H60 Z" fill="#cbd5e1" stroke="#4f46e5" stroke-width="2.5"/>
+    <path d="M195 138 C220 138 235 155 235 120 V85" fill="none" stroke="#64748b" stroke-width="3.5"/>
+    <rect x="228" y="60" width="15" height="26" rx="4" fill="#4f46e5" stroke="#818cf8" stroke-width="2"/>
+    <path d="M228 64 H243" stroke="#ffffff" stroke-width="3"/>
+  </g>
+
+  <!-- Bottom SKU Bar -->
+  <rect x="12" y="196" width="296" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="22" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="700" fill="#0f172a">Portable Ultrasound Scanner</text>
+  <text x="298" y="217" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="end">MED-DI-001</text>
+</svg>
