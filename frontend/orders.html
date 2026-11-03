@@ -1,52 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Orders — MRT Enterprises</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Procurement Orders — MRT Enterprises MediSource</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- Header -->
 <header class="site-header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><span class="mark">MRT</span>MRT ENTERPRISES</a>
+    <a href="index.html" class="logo">
+      <span class="mark">MRT</span>
+      <div>
+        <span>MRT ENTERPRICES</span>
+        <span class="logo-sub">MediSource Healthcare B2B</span>
+      </div>
+    </a>
     <div style="flex:1"></div>
     <div class="header-actions">
-      <a href="cart.html" class="cart-badge">🛒<span>Cart</span><span class="count" id="cart-count">0</span></a>
-      <span id="auth-slot"></span>
+      <a href="index.html#catalog" class="btn btn-ghost btn-sm">← Catalog</a>
+      <a href="cart.html" class="cart-badge" title="Shopping Cart">
+        <div class="cart-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span class="count" id="cart-count">0</span>
+        </div>
+        <span>Cart</span>
+      </a>
+      <div id="auth-slot"></div>
     </div>
   </div>
 </header>
 
-<div class="container section">
-  <div class="section-head"><h2>Your Orders</h2></div>
-  <div id="orders-list"></div>
-</div>
+<main class="page-content">
+  <div class="container section">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <span class="section-eyebrow">Institutional Account</span>
+        <h2>Your Purchase Orders &amp; Invoices</h2>
+      </div>
+      <a href="index.html#catalog" class="btn btn-outline-dark btn-sm">+ New Procurement Order</a>
+    </div>
+
+    <!-- Orders Container -->
+    <div id="orders-list">
+      <!-- Loading Skeleton -->
+      <div class="order-card skeleton" style="height:160px; margin-bottom:16px;"></div>
+      <div class="order-card skeleton" style="height:160px; margin-bottom:16px;"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 MRT Enterprises. All rights reserved. MediSource Healthcare B2B.</span>
+      <div class="footer-legal-links">
+        <a href="#">Privacy Policy</a>
+        <span>•</span>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script src="js/api.js"></script>
 <script>
-async function load() {
+async function loadOrders() {
   const el = document.getElementById("orders-list");
+  if (!el) return;
+
   if (!Session.isLoggedIn()) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">🔒</div><p>Sign in to view your orders.</p><a href="login.html?next=orders.html" class="btn btn-dark" style="margin-top:10px">Sign In</a></div>`;
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔒</div>
+        <h3>Authentication Required</h3>
+        <p>Please sign in with your healthcare organization credentials to view your institutional purchase orders.</p>
+        <a href="login.html?next=orders.html" class="btn btn-primary" style="margin-top:12px;">Sign In to Account</a>
+      </div>
+    `;
     return;
   }
-  const orders = await api("/orders", { auth: true });
-  if (orders.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>No orders yet.</p><a href="index.html" class="btn btn-dark" style="margin-top:10px">Browse Catalog</a></div>`;
+
+  let orders;
+  try {
+    orders = await api("/orders", { auth: true });
+  } catch (err) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">⚠️</div>
+        <h3>Unable to Load Orders</h3>
+        <p>${escapeHtml(err.message)}</p>
+        <button class="btn btn-outline-dark" onclick="loadOrders()" style="margin-top:12px;">Try Again</button>
+      </div>
+    `;
     return;
   }
-  el.innerHTML = orders.map(o => `
-    <div class="cart-summary" style="margin-bottom:14px; position:static">
-      <div class="summary-row"><span style="font-weight:600">Order #${o.id}</span><span class="product-sku">${new Date(o.createdAt).toLocaleDateString()}</span></div>
-      ${o.items.map(i => `<div class="summary-row"><span>${escapeHtml(i.name)} × ${i.qty}</span><span>${formatPrice(i.lineTotal)}</span></div>`).join("")}
-      <div class="summary-row total"><span>Total</span><span>${formatPrice(o.total)}</span></div>
-      <div class="stock-note ok" style="margin-top:6px">Status: ${escapeHtml(o.status)}</div>
-    </div>
-  `).join("");
+
+  if (!orders || orders.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📦</div>
+        <h3>No Purchase Orders Found</h3>
+        <p>Your healthcare facility has not submitted any medical equipment orders yet.</p>
+        <a href="index.html#catalog" class="btn btn-primary" style="margin-top:12px;">Browse Equipment Catalog</a>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = orders.map((o) => {
+    const orderDate = new Date(o.createdAt).toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+    const status = String(o.status || "confirmed").toLowerCase();
+    const itemCount = (o.items || []).reduce((sum, item) => sum + item.qty, 0);
+
+    return `
+      <div class="order-card">
+        <div class="order-card-header">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-family:var(--font-display); font-weight:800; font-size:16px; color:var(--primary-navy);">
+              Order #MED-${o.id}
+            </span>
+            <span class="status-badge ${status}">
+              ● ${escapeHtml(status)}
+            </span>
+          </div>
+          <div style="font-size:12.5px; color:var(--secondary-text);">
+            Placed on <strong>${orderDate}</strong>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; align-items:start;" class="order-card-body">
+          <!-- Line Items List -->
+          <div>
+            <div style="font-size:11.5px; text-transform:uppercase; font-weight:700; color:var(--secondary-text); margin-bottom:8px;">
+              Procured Equipment (${itemCount} Unit${itemCount === 1 ? "" : "s"})
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              ${(o.items || []).map((i) => `
+                <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:4px 0; border-bottom:1px dashed var(--border);">
+                  <div>
+                    <span style="font-weight:600;">${escapeHtml(i.name)}</span>
+                    <span style="color:var(--secondary-text); font-size:12px;"> × ${i.qty}</span>
+                  </div>
+                  <div style="font-weight:600;">${formatPrice(i.lineTotal || (i.price * i.qty))}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Destination & Payment Summary -->
+          <div style="background:var(--bg-page); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px;">
+            <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--secondary-text); margin-bottom:4px;">Delivery Destination</div>
+            <div style="font-weight:600; color:var(--primary-navy); margin-bottom:2px;">${escapeHtml((o.address && o.address.name) || "Consignee")}</div>
+            <div style="color:var(--secondary-text); font-size:12px; margin-bottom:8px;">
+              ${escapeHtml((o.address && o.address.city) || "")} ${o.address && o.address.pin ? " - " + escapeHtml(o.address.pin) : ""}
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:8px; border-top:1px solid var(--border);">
+              <span style="font-weight:700; color:var(--primary-navy);">Total Invoiced:</span>
+              <span style="font-family:var(--font-display); font-weight:800; font-size:16px; color:var(--primary-navy);">${formatPrice(o.total)}</span>
+            </div>
+
+            <div style="margin-top:12px; display:flex; gap:8px;">
+              <a href="order-confirmation.html?id=${o.id}" class="btn btn-outline-dark btn-sm btn-block" style="text-align:center;">
+                View Receipt
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
-load();
+
+loadOrders();
 </script>
 </body>
 </html>

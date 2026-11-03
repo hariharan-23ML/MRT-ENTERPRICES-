@@ -1,45 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Confirmed — MRT Enterprises</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — MRT Enterprises MediSource</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><span class="mark">MRT</span>MRT ENTERPRISES</a>
+    <a href="index.html" class="logo">
+      <span class="mark">MRT</span>
+      <div>
+        <span>MRT ENTERPRICES</span>
+        <span class="logo-sub">MediSource Healthcare B2B</span>
+      </div>
+    </a>
+    <div style="flex:1"></div>
+    <div class="header-actions">
+      <a href="orders.html" class="btn btn-outline-dark btn-sm">My Orders</a>
+    </div>
   </div>
 </header>
 
-<div class="container section" style="max-width:600px; text-align:center">
-  <div id="confirmation-content"></div>
-</div>
+<main class="page-content">
+  <div class="container section" style="max-width:760px;">
+    <div id="confirmation-content">
+      <div class="confirmation-card">
+        <div class="skeleton" style="width:72px; height:72px; border-radius:50%; margin:0 auto 20px;"></div>
+        <div class="skeleton" style="height:32px; width:60%; margin:0 auto 14px;"></div>
+        <div class="skeleton" style="height:18px; width:40%; margin:0 auto 24px;"></div>
+        <div class="skeleton" style="height:120px; width:100%; border-radius:var(--radius-md);"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 MRT Enterprises. All rights reserved. MediSource Healthcare B2B.</span>
+      <div class="footer-legal-links">
+        <a href="#">Privacy Policy</a>
+        <span>•</span>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script src="js/api.js"></script>
 <script>
-async function load() {
+async function loadConfirmation() {
   const id = new URLSearchParams(window.location.search).get("id");
   const el = document.getElementById("confirmation-content");
+  
+  if (!id) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">❓</div>
+        <h3>No Order Specified</h3>
+        <p>Please check your order history to review previously placed healthcare orders.</p>
+        <a href="orders.html" class="btn btn-primary" style="margin-top:12px;">View My Orders</a>
+      </div>
+    `;
+    return;
+  }
+
   try {
     const order = await api(`/orders/${id}`, { auth: true });
+    const orderDate = new Date(order.createdAt).toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    const paymentLabel = {
+      cod: "Cash / Invoice on Delivery (Net 30)",
+      bank_transfer: "Bank Transfer (NEFT/RTGS)",
+      card: "Credit / Debit Card",
+    }[order.paymentMethod] || order.paymentMethod || "Invoice on Delivery";
+
     el.innerHTML = `
-      <div style="font-size:56px; margin-bottom:16px">✅</div>
-      <h1 style="font-family:var(--font-display); color:var(--navy)">Order Confirmed</h1>
-      <p class="product-sku" style="font-size:14px">Order #${order.id} · ${new Date(order.createdAt).toLocaleString()}</p>
-      <p>We've received your order for ${formatPrice(order.total)} and will ship to ${escapeHtml(order.address.city || "")}.</p>
-      <div style="display:flex; gap:12px; justify-content:center; margin-top:20px">
-        <a href="orders.html" class="btn btn-dark">View Orders</a>
-        <a href="index.html" class="btn btn-outline" style="color:var(--navy); border-color:var(--border)">Continue Shopping</a>
+      <div class="confirmation-card">
+        <div class="confirmation-badge-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h1 style="font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--primary-navy); margin-bottom:8px;">Order Confirmed</h1>
+        <p style="font-size:14px; color:var(--secondary-text); margin-bottom:24px;">
+          Purchase Order <strong>#MED-${order.id}</strong> has been logged and queued for calibrated dispatch.
+        </p>
+
+        <!-- Receipt Box -->
+        <div class="confirmation-receipt-box">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--secondary-text); font-weight:700;">Order Date</div>
+              <div style="font-size:13.5px; font-weight:600; color:var(--primary-navy);">${orderDate}</div>
+            </div>
+            <div>
+              <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--secondary-text); font-weight:700;">Status</div>
+              <span class="status-badge ${order.status}">${escapeHtml(order.status)}</span>
+            </div>
+            <div>
+              <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--secondary-text); font-weight:700;">Settlement</div>
+              <div style="font-size:13.5px; font-weight:600; color:var(--primary-navy);">${escapeHtml(paymentLabel)}</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--secondary-text); font-weight:700; margin-bottom:8px;">Equipment Items</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              ${(order.items || []).map(i => `
+                <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:4px 0; border-bottom:1px dashed var(--border);">
+                  <div>
+                    <strong>${escapeHtml(i.name)}</strong> × ${i.qty}
+                    <div style="font-size:11.5px; color:var(--secondary-text);">${escapeHtml(i.sku || "")}</div>
+                  </div>
+                  <div style="font-weight:600;">${formatPrice(i.lineTotal || (i.price * i.qty))}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:800; color:var(--primary-navy); padding-top:10px;">
+            <span>Total Invoiced</span>
+            <span>${formatPrice(order.total)}</span>
+          </div>
+
+          <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border); font-size:12.5px; color:var(--secondary-navy);">
+            <strong>Consignee Destination:</strong><br>
+            ${escapeHtml((order.address && order.address.name) || "Consignee")}, 
+            ${escapeHtml((order.address && order.address.line1) || "")}, 
+            ${escapeHtml((order.address && order.address.city) || "")} 
+            ${order.address && order.address.pin ? " - " + escapeHtml(order.address.pin) : ""}<br>
+            Phone: ${escapeHtml((order.address && order.address.phone) || "")}
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px;">
+          <a href="orders.html" class="btn btn-primary">Track in My Orders</a>
+          <a href="index.html#catalog" class="btn btn-outline-dark">Continue Sourcing</a>
+          <button type="button" class="btn btn-ghost" onclick="window.print()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Receipt
+          </button>
+        </div>
       </div>
     `;
   } catch (err) {
-    el.innerHTML = `<div class="empty-state"><p>${escapeHtml(err.message)}</p></div>`;
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">⚠️</div>
+        <h3>Unable to Retrieve Order</h3>
+        <p>${escapeHtml(err.message)}</p>
+        <a href="orders.html" class="btn btn-primary" style="margin-top:12px;">Go to Orders</a>
+      </div>
+    `;
   }
 }
-load();
+
+loadConfirmation();
 </script>
 </body>
 </html>

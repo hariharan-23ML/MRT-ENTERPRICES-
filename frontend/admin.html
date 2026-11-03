@@ -1,36 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Console — MRT Enterprises</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Operations Console — MRT Enterprises MediSource</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- Header -->
 <header class="site-header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><span class="mark">MRT</span>MRT ENTERPRISES <span class="product-sku" style="margin-left:8px">ADMIN</span></a>
+    <a href="admin.html" class="logo">
+      <span class="mark" style="background:linear-gradient(135deg, var(--medical-teal), var(--primary-navy));">MRT</span>
+      <div>
+        <span>MRT ENTERPRICES</span>
+        <span class="logo-sub" style="color:var(--medical-teal); font-weight:700;">Admin Operations Console</span>
+      </div>
+    </a>
     <div style="flex:1"></div>
     <div class="header-actions">
-      <a href="index.html">🏬<span>Storefront</span></a>
-      <span id="auth-slot"></span>
+      <a href="index.html" class="btn btn-outline-dark btn-sm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Storefront</span>
+      </a>
+      <div id="auth-slot"></div>
     </div>
   </div>
 </header>
 
 <div class="admin-shell">
-  <aside class="admin-sidebar">
-    <a href="#" data-tab="dashboard" class="active">Dashboard</a>
-    <a href="#" data-tab="products">Products</a>
-    <a href="#" data-tab="orders">Orders</a>
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar" aria-label="Admin Navigation">
+    <div class="admin-sidebar-header">
+      <div class="title">Console Modules</div>
+    </div>
+    <a href="#" data-tab="dashboard" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Dashboard Overview</span>
+    </a>
+    <a href="#" data-tab="products">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      <span>Medical Products</span>
+    </a>
+    <a href="#" data-tab="orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      <span>Purchase Orders</span>
+    </a>
+    <a href="index.html" style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.08);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      <span>Go to Storefront</span>
+    </a>
   </aside>
+
+  <!-- Admin Main Workspace -->
   <main class="admin-main">
     <div id="admin-guard"></div>
     <div id="admin-content"></div>
   </main>
 </div>
 
+<!-- Modal Container for Add/Edit Product -->
 <div id="modal-root"></div>
 
 <script src="js/api.js"></script>

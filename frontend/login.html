@@ -1,51 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In — MRT Enterprises</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — MRT Enterprises MediSource</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><span class="mark">MRT</span>MRT ENTERPRISES</a>
+    <a href="index.html" class="logo">
+      <span class="mark">MRT</span>
+      <div>
+        <span>MRT ENTERPRISES</span>
+        <span class="logo-sub">MediSource Healthcare B2B</span>
+      </div>
+    </a>
+    <div style="flex:1"></div>
+    <div class="header-actions">
+      <a href="register.html" class="btn btn-outline-dark btn-sm">Create Business Account</a>
+    </div>
   </div>
 </header>
 
-<div class="auth-card">
-  <h1>Sign In</h1>
-  <div id="login-error"></div>
-  <form id="login-form">
-    <div class="form-field">
-      <label>Email</label>
-      <input type="email" id="l-email" required>
+<main class="auth-container">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <a href="index.html" class="logo">
+        <span class="mark">MRT</span>
+        <span>MRT ENTERPRISES</span>
+      </a>
+      <h1>Healthcare Portal Sign In</h1>
+      <p class="auth-subtitle">Access your hospital, clinic, or institutional procurement account</p>
     </div>
-    <div class="form-field">
-      <label>Password</label>
-      <input type="password" id="l-password" required>
+
+    <div id="login-error"></div>
+
+    <form id="login-form" novalidate>
+      <div class="form-field">
+        <label for="l-email">
+          <span>Business Email</span>
+          <span class="req">*</span>
+        </label>
+        <input type="email" id="l-email" placeholder="doctor@hospital.org or procurement@domain.com" required autocomplete="email">
+      </div>
+
+      <div class="form-field">
+        <label for="l-password">
+          <span>Account Password</span>
+          <span class="req">*</span>
+        </label>
+        <div class="password-wrap">
+          <input type="password" id="l-password" placeholder="Enter your password" required autocomplete="current-password">
+          <button type="button" class="password-toggle-btn" id="pw-toggle" aria-label="Toggle password visibility">
+            <svg id="pw-icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; font-size:13px;">
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; text-transform:none; font-weight:500; color:var(--secondary-text);">
+          <input type="checkbox" id="remember-me" checked>
+          <span>Remember my institutional ID</span>
+        </label>
+        <a href="mailto:support@medisource.mrt?subject=Password%20Reset" style="color:var(--primary-blue); font-weight:600;">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-submit-btn">
+        <span>Sign In to Portal</span>
+      </button>
+    </form>
+
+    <div class="test-credentials-pill">
+      <div>
+        <strong>Admin Test Login:</strong><br>
+        <code>admin@medisource.test</code> / <code>admin123</code>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm" id="fill-admin-btn" style="padding:4px 8px; font-size:11.5px; border:1px solid var(--blue-pale);">Auto-fill</button>
     </div>
-    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-  </form>
-  <p class="hint">Don't have an account? <a href="register.html" style="color:var(--blue); font-weight:600">Create one</a></p>
-</div>
+
+    <p class="hint">
+      New healthcare facility? <a href="register.html" style="color:var(--primary-blue); font-weight:700;">Register for B2B Account</a>
+    </p>
+  </div>
+</main>
 
 <script src="js/api.js"></script>
 <script>
-document.getElementById("login-form").addEventListener("submit", async (e) => {
+// Password toggle
+const pwToggle = document.getElementById("pw-toggle");
+const pwInput = document.getElementById("l-password");
+if (pwToggle && pwInput) {
+  pwToggle.addEventListener("click", () => {
+    const isPw = pwInput.type === "password";
+    pwInput.type = isPw ? "text" : "password";
+    pwToggle.setAttribute("aria-label", isPw ? "Hide password" : "Show password");
+  });
+}
+
+// Auto-fill admin test credentials
+const fillAdminBtn = document.getElementById("fill-admin-btn");
+if (fillAdminBtn) {
+  fillAdminBtn.addEventListener("click", () => {
+    document.getElementById("l-email").value = "admin@medisource.test";
+    document.getElementById("l-password").value = "admin123";
+  });
+}
+
+// Form submit
+const form = document.getElementById("login-form");
+const submitBtn = document.getElementById("login-submit-btn");
+const errorEl = document.getElementById("login-error");
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const errorEl = document.getElementById("login-error");
   errorEl.innerHTML = "";
+
+  const email = document.getElementById("l-email").value.trim();
+  const password = document.getElementById("l-password").value;
+
+  if (!email || !password) {
+    errorEl.innerHTML = `<div class="error-box">Please provide both your registered email and password.</div>`;
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Signing in...";
+
   try {
     const { token, user } = await api("/auth/login", {
       method: "POST",
-      body: { email: document.getElementById("l-email").value, password: document.getElementById("l-password").value },
+      body: { email, password },
     });
     Session.save(token, user);
+    toast("Welcome back, " + (user.name || "User"), "success");
+    
     const next = new URLSearchParams(window.location.search).get("next") || "index.html";
-    window.location.href = next;
+    setTimeout(() => {
+      window.location.href = next;
+    }, 300);
   } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Sign In to Portal";
     errorEl.innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`;
   }
 });

@@ -1,58 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account — MRT Enterprises</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Business Account — MRT Enterprises MediSource</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><span class="mark">MRT</span>MRT ENTERPRISES</a>
+    <a href="index.html" class="logo">
+      <span class="mark">MRT</span>
+      <div>
+        <span>MRT ENTERPRISES</span>
+        <span class="logo-sub">MediSource Healthcare B2B</span>
+      </div>
+    </a>
+    <div style="flex:1"></div>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-outline-dark btn-sm">Existing Account? Sign In</a>
+    </div>
   </div>
 </header>
 
-<div class="auth-card">
-  <h1>Create Account</h1>
-  <div id="register-error"></div>
-  <form id="register-form">
-    <div class="form-field">
-      <label>Full Name</label>
-      <input type="text" id="r-name" required>
+<main class="auth-container">
+  <div class="auth-card" style="max-width:540px;">
+    <div class="auth-card-header">
+      <a href="index.html" class="logo">
+        <span class="mark">MRT</span>
+        <span>MRT ENTERPRISES</span>
+      </a>
+      <h1>Create Business Account</h1>
+      <p class="auth-subtitle">Register your hospital, diagnostic clinic, or medical distribution firm</p>
     </div>
-    <div class="form-field">
-      <label>Email</label>
-      <input type="email" id="r-email" required>
-    </div>
-    <div class="form-field">
-      <label>Password (min 6 characters)</label>
-      <input type="password" id="r-password" minlength="6" required>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-  </form>
-  <p class="hint">Already have an account? <a href="login.html" style="color:var(--blue); font-weight:600">Sign in</a></p>
-</div>
+
+    <div id="register-error"></div>
+
+    <form id="register-form" novalidate>
+      <div class="form-grid">
+        <div class="form-field full">
+          <label for="r-name">
+            <span>Procurement Officer / Contact Name</span>
+            <span class="req">*</span>
+          </label>
+          <input type="text" id="r-name" placeholder="Dr. Sarah Sharma / Rajiv Menon" required autocomplete="name">
+        </div>
+
+        <div class="form-field full">
+          <label for="r-email">
+            <span>Institutional / Business Email</span>
+            <span class="req">*</span>
+          </label>
+          <input type="email" id="r-email" placeholder="procurement@cityhospital.in" required autocomplete="email">
+        </div>
+
+        <div class="form-field">
+          <label for="r-org">
+            <span>Facility / Organization Name</span>
+            <span style="font-size:10px; color:var(--secondary-text);">(Optional)</span>
+          </label>
+          <input type="text" id="r-org" placeholder="City Care Multispecialty">
+        </div>
+
+        <div class="form-field">
+          <label for="r-facility">
+            <span>Facility Classification</span>
+            <span style="font-size:10px; color:var(--secondary-text);">(Optional)</span>
+          </label>
+          <select id="r-facility">
+            <option value="hospital">Hospital / Medical College</option>
+            <option value="clinic">Outpatient / Day Care Clinic</option>
+            <option value="diagnostic">Diagnostic / Pathology Lab</option>
+            <option value="distributor">Medical Equipment Distributor</option>
+            <option value="practitioner">Private Practitioner</option>
+          </select>
+        </div>
+
+        <div class="form-field full">
+          <label for="r-gst">
+            <span>GSTIN (For 100% Tax Invoicing &amp; ITC Credit)</span>
+            <span style="font-size:10px; color:var(--secondary-text);">(Optional)</span>
+          </label>
+          <input type="text" id="r-gst" placeholder="22AAAAA0000A1Z5" maxlength="15" style="text-transform:uppercase;">
+        </div>
+
+        <div class="form-field">
+          <label for="r-password">
+            <span>Password (min 6 chars)</span>
+            <span class="req">*</span>
+          </label>
+          <div class="password-wrap">
+            <input type="password" id="r-password" minlength="6" placeholder="At least 6 characters" required autocomplete="new-password">
+            <button type="button" class="password-toggle-btn" id="pw-toggle-1" aria-label="Toggle password visibility">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="r-confirm-password">
+            <span>Confirm Password</span>
+            <span class="req">*</span>
+          </label>
+          <div class="password-wrap">
+            <input type="password" id="r-confirm-password" minlength="6" placeholder="Repeat password" required autocomplete="new-password">
+            <button type="button" class="password-toggle-btn" id="pw-toggle-2" aria-label="Toggle password visibility">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin:8px 0 20px; font-size:12px; color:var(--secondary-text); display:flex; align-items:center; gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <span>Your facility data is encrypted. We strictly serve verified medical organizations.</span>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="register-submit-btn">
+        <span>Complete B2B Registration</span>
+      </button>
+    </form>
+
+    <p class="hint">
+      Already have an institutional account? <a href="login.html" style="color:var(--primary-blue); font-weight:700;">Sign In</a>
+    </p>
+  </div>
+</main>
 
 <script src="js/api.js"></script>
 <script>
-document.getElementById("register-form").addEventListener("submit", async (e) => {
+// Password toggles
+function setupToggle(btnId, inputId) {
+  const btn = document.getElementById(btnId);
+  const input = document.getElementById(inputId);
+  if (btn && input) {
+    btn.addEventListener("click", () => {
+      const isPw = input.type === "password";
+      input.type = isPw ? "text" : "password";
+    });
+  }
+}
+setupToggle("pw-toggle-1", "r-password");
+setupToggle("pw-toggle-2", "r-confirm-password");
+
+const form = document.getElementById("register-form");
+const submitBtn = document.getElementById("register-submit-btn");
+const errorEl = document.getElementById("register-error");
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const errorEl = document.getElementById("register-error");
   errorEl.innerHTML = "";
+
+  const name = document.getElementById("r-name").value.trim();
+  const email = document.getElementById("r-email").value.trim();
+  const password = document.getElementById("r-password").value;
+  const confirmPassword = document.getElementById("r-confirm-password").value;
+  const org = document.getElementById("r-org").value.trim();
+  const facility = document.getElementById("r-facility").value;
+  const gstin = document.getElementById("r-gst").value.trim();
+
+  // Validation
+  if (!name || !email || !password) {
+    errorEl.innerHTML = `<div class="error-box">Please provide your Full Name, Business Email, and Password.</div>`;
+    return;
+  }
+
+  if (password.length < 6) {
+    errorEl.innerHTML = `<div class="error-box">Account password must be at least 6 characters in length.</div>`;
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    errorEl.innerHTML = `<div class="error-box">Passwords do not match. Please verify your confirmation password.</div>`;
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Creating Account...";
+
   try {
+    // The backend register endpoint accepts { name, email, password }
     const { token, user } = await api("/auth/register", {
       method: "POST",
-      body: {
-        name: document.getElementById("r-name").value,
-        email: document.getElementById("r-email").value,
-        password: document.getElementById("r-password").value,
-      },
+      body: { name, email, password },
     });
+
+    // Save user session
     Session.save(token, user);
-    window.location.href = "index.html";
+
+    // Save optional institutional profile for seamless checkout autofill
+    if (org || gstin || facility) {
+      try {
+        localStorage.setItem("mrt_org_profile", JSON.stringify({ org, facility, gstin }));
+      } catch (err) {}
+    }
+
+    toast("Account registered successfully!", "success");
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 400);
   } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Complete B2B Registration";
     errorEl.innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`;
   }
 });
