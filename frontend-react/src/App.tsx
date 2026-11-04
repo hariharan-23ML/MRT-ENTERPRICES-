@@ -1,39 +1,216 @@
-import { useState, type ReactNode } from 'react'
-import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
+import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from 'react'
+import { Link, NavLink, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { CATEGORIES, inr, products, slug, type Product } from './Shop'
 import './App.css'
 
-type Product = { id:number; name:string; category:string; price:number; moq:number; stock:number; unit:string; icon:string; description:string; tiers:{min:number;price:number}[] }
-const products:Product[]=[
-{id:1,name:'Nitrile Examination Gloves',category:'Personal Protection',price:120,moq:10,stock:2400,unit:'box of 100',icon:'🧤',description:'Powder-free nitrile examination gloves for clinical, diagnostic and laboratory use.',tiers:[{min:1,price:120},{min:10,price:108},{min:50,price:96},{min:100,price:88}]},
-{id:2,name:'Digital Blood Pressure Monitor',category:'Diagnostic Equipment',price:1450,moq:2,stock:180,unit:'piece',icon:'🩺',description:'Automatic digital blood pressure monitor with clear display and memory function.',tiers:[{min:1,price:1450},{min:5,price:1375},{min:20,price:1290}]},
-{id:3,name:'Disposable Surgical Masks',category:'Personal Protection',price:85,moq:20,stock:5000,unit:'pack of 50',icon:'😷',description:'Three-layer disposable masks for healthcare environments.',tiers:[{min:1,price:85},{min:20,price:78},{min:100,price:69}]},
-{id:4,name:'Infrared Thermometer',category:'Diagnostic Equipment',price:890,moq:3,stock:320,unit:'piece',icon:'🌡️',description:'Non-contact infrared thermometer for quick temperature screening.',tiers:[{min:1,price:890},{min:5,price:835},{min:25,price:790}]},
-{id:5,name:'Sterile Gauze Swabs',category:'Wound Care',price:160,moq:10,stock:1250,unit:'pack',icon:'🩹',description:'Sterile absorbent gauze swabs for wound dressing and clinical care.',tiers:[{min:1,price:160},{min:10,price:148},{min:50,price:135}]},
-{id:6,name:'Oxygen Mask with Tube',category:'Respiratory Care',price:48,moq:25,stock:3000,unit:'piece',icon:'💨',description:'Patient oxygen mask with connecting tube for respiratory support.',tiers:[{min:1,price:48},{min:25,price:44},{min:100,price:39}]}
-]
-type Line={product:Product;quantity:number}
-const priceFor=(p:Product,q:number)=>[...p.tiers].reverse().find(t=>q>=t.min)?.price??p.price
-const money=(n:number)=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n)
-
-export default function App(){
- const [cart,setCart]=useState<Line[]>([]),[query,setQuery]=useState(''),[category,setCategory]=useState('All categories'),[notice,setNotice]=useState('')
- const add=(p:Product,q=p.moq)=>{setCart(old=>{const x=old.find(i=>i.product.id===p.id);return x?old.map(i=>i.product.id===p.id?{...i,quantity:i.quantity+q}:i):[...old,{product:p,quantity:q}]});setNotice(`${p.name} added to cart`);window.setTimeout(()=>setNotice(''),2200)}
- const update=(id:number,q:number)=>setCart(old=>old.map(x=>x.product.id===id?{...x,quantity:Math.max(x.product.moq,Math.min(x.product.stock,q||x.product.moq))}:x))
- const remove=(id:number)=>setCart(old=>old.filter(x=>x.product.id!==id))
- const total=cart.reduce((n,x)=>n+priceFor(x.product,x.quantity)*x.quantity,0)
- const filtered=products.filter(p=>(category==='All categories'||p.category===category)&&`${p.name} ${p.category}`.toLowerCase().includes(query.toLowerCase()))
- return <div className="app-shell"><header className="topbar"><div className="container d-flex justify-content-between"><span>Wholesale medical supplies, made simpler</span><span className="topbar-right">Bulk pricing · Reliable sourcing · Business support</span></div></header><nav className="navbar navbar-expand-lg main-nav"><div className="container"><Link className="navbar-brand brand" to="/"><span className="brand-mark">M+</span><span>MRT-ENTERPRISES<small>HEALTHCARE WHOLESALE</small></span></Link><button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"><span className="navbar-toggler-icon"/></button><div className="collapse navbar-collapse" id="mainMenu"><div className="nav-search mx-lg-4 my-3 my-lg-0"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search medical products..."/><Link to="/products" className="search-btn">Search</Link></div><div className="navbar-nav ms-auto align-items-lg-center gap-lg-3"><NavLink className="nav-link" to="/products">Products</NavLink><NavLink className="nav-link" to="/orders">My orders</NavLink><Link className="nav-link" to="/login">Sign in</Link><Link className="cart-link" to="/cart">Cart <span>{cart.length}</span></Link></div></div></div></nav>{notice&&<div className="toast-note">{notice}</div>}
- <Routes><Route path="/" element={<Home add={add}/>}/><Route path="/products" element={<Products items={filtered} category={category} setCategory={setCategory} add={add}/>}/><Route path="/products/:id" element={<Detail add={add}/>}/><Route path="/cart" element={<Cart cart={cart} update={update} remove={remove} total={total}/>}/><Route path="/checkout" element={<Checkout cart={cart} total={total}/>}/><Route path="/login" element={<Auth mode="login"/>}/><Route path="/register" element={<Auth mode="register"/>}/><Route path="/orders" element={<Orders/>}/><Route path="/admin" element={<Admin/>}/><Route path="*" element={<Empty title="Page not found"/>}/></Routes><Footer/></div>
+function useLocal<T>(k: string, init: T) {
+  const [v, s] = useState<T>(() => { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : init } catch { return init } })
+  useEffect(() => { try { localStorage.setItem(k, JSON.stringify(v)) } catch { /* ignore */ } }, [k, v])
+  return [v, s] as const
 }
-function Heading({eyebrow,title,text}:{eyebrow:string;title:string;text?:string}){return <div className="section-heading"><span className="eyebrow">{eyebrow}</span><h2>{title}</h2>{text&&<p>{text}</p>}</div>}
-function Home({add}:{add:(p:Product,q?:number)=>void}){return <><section className="hero-section"><div className="container hero-grid"><div className="hero-copy"><span className="eyebrow"><span/> YOUR PARTNER IN BETTER CARE</span><h1>Healthcare supplies.<br/><em>Delivered smarter.</em></h1><p className="hero-lead">Source trusted medical products at competitive wholesale prices. One simple platform for clinics, hospitals and healthcare businesses.</p><div className="d-flex flex-wrap gap-3"><Link to="/products" className="btn btn-primary btn-lg px-4">Explore products →</Link><Link to="/register" className="btn btn-outline-primary btn-lg px-4">Create business account</Link></div><div className="hero-proof"><span>✓ Verified product listings</span><span>✓ Transparent bulk pricing</span></div></div><div className="hero-art"><div className="art-circle circle-one"/><div className="art-circle circle-two"/><div className="medical-card"><div className="medical-card-top"><span className="brand-mark">M+</span><span className="status-pill">● IN STOCK</span></div><div className="medical-emoji">🩺</div><div className="medical-card-title">Care essentials<br/><b>All in one place.</b></div><div className="medical-card-bottom"><span>Wholesale made easy</span><b>→</b></div></div><div className="floating-tag"><span>↗</span><div><b>Bulk savings</b><small>Better prices at scale</small></div></div><div className="floating-shield">✚</div></div></div></section><section className="trust-strip"><div className="container trust-grid">{['Built for healthcare businesses','Quantity-based pricing','Simple order management','One convenient platform'].map((x,i)=><div key={x}><b>0{i+1}</b><span>{x}</span></div>)}</div></section><section className="section-pad"><div className="container"><Heading eyebrow="SHOP BY CATEGORY" title="Find what your facility needs" text="Explore essential supplies across key healthcare categories."/><div className="category-grid">{[['🧤','Personal Protection','Gloves, masks and more'],['🩺','Diagnostic Equipment','Monitoring and testing'],['🩹','Wound Care','Dressings and bandages'],['💨','Respiratory Care','Oxygen and respiratory']].map(x=><Link to="/products" className="category-card" key={x[1]}><span className="category-icon">{x[0]}</span><b>{x[1]}</b><small>{x[2]}</small><span className="category-arrow">↗</span></Link>)}</div></div></section><section className="section-pad products-section"><div className="container"><div className="section-head-row"><Heading eyebrow="POPULAR PRODUCTS" title="Frequently ordered essentials" text="A selection of everyday products for your business."/><Link to="/products" className="text-link">View all products →</Link></div><div className="row g-4">{products.slice(0,4).map(p=><div className="col-12 col-sm-6 col-xl-3" key={p.id}><Card p={p} add={add}/></div>)}</div></div></section><section className="bulk-banner"><div className="container bulk-inner"><div><span className="eyebrow light">MORE YOU ORDER, MORE YOU SAVE</span><h2>Smarter pricing for<br/>bigger requirements.</h2><p>Our tiered pricing helps your business get better unit rates as quantities increase.</p><Link to="/products" className="btn btn-light px-4">Explore bulk pricing →</Link></div><div className="bulk-visual"><div className="bulk-price"><small>YOUR UNIT PRICE</small><strong>↓ 15%</strong><span>Illustrative bulk savings</span></div><div className="bulk-bars"><i/><i/><i/><i/></div></div></div></section><section className="section-pad"><div className="container"><Heading eyebrow="WHY MRT-ENTERPRISES" title="A simpler way to source healthcare supplies"/><div className="row g-4 mt-2">{[['◎','Curated essentials','Browse commonly needed healthcare products in one place.'],['↘','Transparent bulk rates','See quantity breaks and applicable unit prices clearly.'],['▤','Order visibility','Keep your purchasing and order information organised.']].map(x=><div className="col-md-4" key={x[1]}><div className="benefit-card"><span>{x[0]}</span><h5>{x[1]}</h5><p>{x[2]}</p></div></div>)}</div></div></section></>}
-function Card({p,add}:{p:Product;add:(p:Product,q?:number)=>void}){return <div className="product-card"><Link to={`/products/${p.id}`} className="product-image"><span className="product-emoji">{p.icon}</span><span className="stock-tag">In stock</span></Link><div className="product-info"><small>{p.category}</small><Link to={`/products/${p.id}`} className="product-name">{p.name}</Link><div className="product-meta">MOQ: {p.moq} · {p.unit}</div><div className="product-price">{money(p.price)} <small>/ unit</small></div><div className="tier-hint">Bulk rates available</div><button className="btn btn-outline-primary w-100 mt-3" onClick={()=>add(p)}>Add to cart</button></div></div>}
-function Products({items,category,setCategory,add}:{items:Product[];category:string;setCategory:(s:string)=>void;add:(p:Product,q?:number)=>void}){const cats=['All categories','Personal Protection','Diagnostic Equipment','Wound Care','Respiratory Care'];return <main className="page-wrap"><div className="container"><div className="page-title-row"><div><span className="eyebrow">MEDICAL SUPPLIES</span><h1>Explore products</h1><p>Wholesale essentials for healthcare professionals and businesses.</p></div><span className="result-count">{items.length} products</span></div><div className="filter-row">{cats.map(c=><button key={c} className={`filter-chip ${category===c?'active':''}`} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="row g-4">{items.map(p=><div className="col-12 col-sm-6 col-lg-4 col-xl-3" key={p.id}><Card p={p} add={add}/></div>)}</div>{!items.length&&<Empty title="No products match your search"/>}</div></main>}
-function Detail({add}:{add:(p:Product,q?:number)=>void}){const {id}=useParams();const p=products.find(x=>x.id===Number(id));const [qty,setQty]=useState(p?.moq??1);if(!p)return <Empty title="Product not found"/>;const unit=priceFor(p,qty);return <main className="page-wrap"><div className="container"><div className="breadcrumb-lite"><Link to="/">Home</Link> / <Link to="/products">Products</Link> / {p.name}</div><div className="row g-5 product-detail"><div className="col-lg-6"><div className="detail-image"><span>{p.icon}</span><small>MRT-ENTERPRISES PRODUCT LISTING</small></div></div><div className="col-lg-6"><span className="eyebrow">{p.category}</span><h1>{p.name}</h1><p className="detail-desc">{p.description}</p><div className="detail-price">{money(unit)} <small>/ {p.unit}</small></div><p className="muted">Price updates based on order quantity.</p><div className="detail-facts"><span>Minimum order<b>{p.moq} units</b></span><span>Available stock<b>{p.stock.toLocaleString('en-IN')}</b></span></div><h6 className="mt-4 mb-2">Bulk pricing</h6><div className="tier-table">{p.tiers.map(t=><div className={qty>=t.min?'tier-active':''} key={t.min}><span>{t.min}+ units</span><b>{money(t.price)}</b></div>)}</div><label className="form-label mt-4">Order quantity</label><div className="quantity-control"><button onClick={()=>setQty(Math.max(p.moq,qty-1))}>−</button><input type="number" min={p.moq} max={p.stock} value={qty} onChange={e=>setQty(Math.max(p.moq,Number(e.target.value)||p.moq))}/><button onClick={()=>setQty(Math.min(p.stock,qty+1))}>+</button></div><div className="detail-total"><span>Estimated subtotal</span><b>{money(unit*qty)}</b></div><button className="btn btn-primary btn-lg w-100 mt-3" onClick={()=>add(p,qty)}>Add {qty} to cart</button></div></div></div></main>}
-function Cart({cart,update,remove,total}:{cart:Line[];update:(id:number,q:number)=>void;remove:(id:number)=>void;total:number}){return <main className="page-wrap"><div className="container"><div className="page-title-row"><div><span className="eyebrow">YOUR SELECTION</span><h1>Shopping cart</h1><p>Review quantities and bulk pricing before checkout.</p></div></div>{!cart.length?<Empty title="Your cart is empty" action={<Link to="/products" className="btn btn-primary">Explore products</Link>}/>:<div className="row g-4"><div className="col-lg-8"><div className="cart-list">{cart.map(x=><div className="cart-item" key={x.product.id}><div className="cart-thumb">{x.product.icon}</div><div className="cart-item-info"><b>{x.product.name}</b><small>{x.product.unit} · MOQ {x.product.moq}</small><span>{money(priceFor(x.product,x.quantity))} / unit</span></div><div className="quantity-control compact"><button onClick={()=>update(x.product.id,x.quantity-1)}>−</button><input value={x.quantity} type="number" onChange={e=>update(x.product.id,Number(e.target.value))}/><button onClick={()=>update(x.product.id,x.quantity+1)}>+</button></div><b className="line-total">{money(priceFor(x.product,x.quantity)*x.quantity)}</b><button className="remove-btn" onClick={()=>remove(x.product.id)}>×</button></div>)}</div></div><div className="col-lg-4"><div className="summary-card"><h5>Order summary</h5><div><span>Subtotal</span><b>{money(total)}</b></div><div><span>Shipping</span><span>Calculated at checkout</span></div><hr/><div className="summary-total"><span>Estimated total</span><b>{money(total)}</b></div><Link to="/checkout" className="btn btn-primary w-100 mt-3">Proceed to checkout →</Link><Link to="/products" className="continue-link">Continue shopping</Link></div></div></div>}</div></main>}
-function Checkout({cart,total}:{cart:Line[];total:number}){const [done,setDone]=useState(false);if(done)return <main className="page-wrap"><div className="container"><Empty title="Order request received" text="Demo only: connect the Spring Boot order API to submit real orders." action={<Link to="/orders" className="btn btn-primary">View orders</Link>}/></div></main>;return <main className="page-wrap"><div className="container"><div className="page-title-row"><div><span className="eyebrow">FINAL STEP</span><h1>Checkout</h1><p>Provide delivery details for your order request.</p></div></div>{!cart.length?<Empty title="Your cart is empty" action={<Link to="/products" className="btn btn-primary">Browse products</Link>}/>:<div className="row g-4"><div className="col-lg-7"><form className="form-panel" onSubmit={e=>{e.preventDefault();setDone(true)}}><h5>Business and delivery details</h5><div className="row g-3">{[['Contact person','Full name'],['Business name','Hospital / clinic / pharmacy'],['Email address','you@business.com'],['Phone number','+91']].map(([l,p])=><div className="col-md-6" key={l}><label className="form-label">{l}</label><input className="form-control" required placeholder={p} type={l==='Email address'?'email':'text'}/></div>)}<div className="col-12"><label className="form-label">Delivery address</label><textarea className="form-control" rows={3} required placeholder="Street, area, city, state and PIN code"/></div></div><button className="btn btn-primary btn-lg mt-4 w-100">Submit order request</button></form></div><div className="col-lg-5"><div className="summary-card"><h5>Order summary</h5>{cart.map(x=><div key={x.product.id}><span>{x.product.name} × {x.quantity}</span><b>{money(priceFor(x.product,x.quantity)*x.quantity)}</b></div>)}<hr/><div className="summary-total"><span>Total</span><b>{money(total)}</b></div></div></div></div>}</div></main>}
-function Auth({mode}:{mode:'login'|'register'}){const [submitted,setSubmitted]=useState(false);return <main className="page-wrap"><div className="container auth-layout"><div className="auth-aside"><span className="brand-mark">M+</span><h2>Business purchasing,<br/>made more straightforward.</h2><p>Manage your healthcare sourcing from one convenient place.</p></div><form className="auth-card" onSubmit={e=>{e.preventDefault();setSubmitted(true)}}><span className="eyebrow">{mode==='login'?'WELCOME BACK':'JOIN MRT-ENTERPRISES'}</span><h1>{mode==='login'?'Sign in to your account':'Create your account'}</h1><p>{mode==='login'?'Access your orders and purchasing activity.':'Set up a business account to get started.'}</p>{mode==='register'&&<><label className="form-label">Full name</label><input className="form-control mb-3" required placeholder="Your name"/><label className="form-label">Business name</label><input className="form-control mb-3" required placeholder="Business or facility name"/></>}<label className="form-label">Email address</label><input type="email" className="form-control mb-3" required placeholder="name@business.com"/><label className="form-label">Password</label><input type="password" className="form-control mb-3" required minLength={6} placeholder="Enter password"/><button className="btn btn-primary w-100 mt-2">{mode==='login'?'Sign in':'Create account'}</button>{submitted&&<div className="alert alert-info mt-3 mb-0">Demo form only. Authentication will be connected to the Spring Boot API.</div>}<div className="auth-switch">{mode==='login'?<>New to MRT-ENTERPRISES? <Link to="/register">Create an account</Link></>:<>Already registered? <Link to="/login">Sign in</Link></>}</div></form></div></main>}
-function Orders(){return <main className="page-wrap"><div className="container"><div className="page-title-row"><div><span className="eyebrow">PURCHASING</span><h1>My orders</h1><p>Track your business orders and purchasing history.</p></div></div><Empty title="No orders to display" text="Your order history will appear here once connected to your account." action={<Link to="/products" className="btn btn-primary">Browse products</Link>}/></div></main>}
-function Admin(){return <main className="page-wrap"><div className="container"><div className="page-title-row"><div><span className="eyebrow">MANAGEMENT</span><h1>Admin overview</h1><p>A snapshot of your MRT-ENTERPRISES store operations.</p></div><span className="status-pill">DEMO DASHBOARD</span></div><div className="row g-4 mb-4">{[['Total products','06'],['Pending orders','—'],['Inventory status','Sample data'],['Customers','—']].map(x=><div className="col-6 col-lg-3" key={x[0]}><div className="stat-card"><span>{x[0]}</span><b>{x[1]}</b><small>Overview metric</small></div></div>)}</div><div className="form-panel"><h5>Product catalogue</h5><div className="table-responsive"><table className="table align-middle"><thead><tr><th>Product</th><th>Category</th><th>MOQ</th><th>Stock</th><th>Starting price</th></tr></thead><tbody>{products.map(p=><tr key={p.id}><td>{p.icon} {p.name}</td><td>{p.category}</td><td>{p.moq}</td><td>{p.stock.toLocaleString('en-IN')}</td><td>{money(p.price)}</td></tr>)}</tbody></table></div><small className="muted">Demo catalogue; management actions require admin APIs.</small></div></div></main>}
-function Empty({title,text,action}:{title:string;text?:string;action?:ReactNode}){return <div className="empty-state"><div>✚</div><h3>{title}</h3>{text&&<p>{text}</p>}{action}</div>}
-function Footer(){return <footer className="site-footer"><div className="container"><div className="footer-main"><div><Link className="navbar-brand brand footer-brand" to="/"><span className="brand-mark">M+</span><span>MRT-ENTERPRISES<small>HEALTHCARE WHOLESALE</small></span></Link><p>Making healthcare procurement simpler for businesses and care providers.</p></div><div><b>Explore</b><Link to="/products">All products</Link><Link to="/products">Categories</Link><Link to="/orders">My orders</Link></div><div><b>Account</b><Link to="/login">Sign in</Link><Link to="/register">Create account</Link><Link to="/admin">Admin demo</Link></div><div><b>Need assistance?</b><span>Business support</span><span>Contact your MRT-ENTERPRISES team</span></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} MRT-ENTERPRISES. All rights reserved.</span><span>Healthcare sourcing, made simpler.</span></div></div></footer>}
+
+type Store = { cart: Record<string, number>; add: (id: string, q: number) => void; setQty: (id: string, q: number) => void; remove: (id: string) => void; wish: string[]; toggleWish: (id: string) => void; count: number; total: number; say: (m: string) => void }
+const Ctx = createContext<Store>(null as unknown as Store)
+const useStore = () => useContext(Ctx)
+
+function Provider({ children }: { children: ReactNode }) {
+  const [cart, setCart] = useLocal<Record<string, number>>('mrt-cart', {})
+  const [wish, setWish] = useLocal<string[]>('mrt-wish', [])
+  const [msg, setMsg] = useState('')
+  const say = (m: string) => { setMsg(m); setTimeout(() => setMsg(''), 2400) }
+  const add = (id: string, q: number) => { setCart(c => ({ ...c, [id]: (c[id] || 0) + q })); say('Added to cart') }
+  const setQty = (id: string, q: number) => setCart(c => ({ ...c, [id]: Math.max(1, q) }))
+  const remove = (id: string) => setCart(c => { const n = { ...c }; delete n[id]; return n })
+  const toggleWish = (id: string) => setWish(w => w.includes(id) ? w.filter(x => x !== id) : [...w, id])
+  const ids = Object.keys(cart).filter(id => products.some(p => p.id === id))
+  const count = ids.reduce((a, id) => a + cart[id], 0)
+  const total = ids.reduce((a, id) => a + cart[id] * (products.find(p => p.id === id)?.price || 0), 0)
+  return <Ctx.Provider value={{ cart, add, setQty, remove, wish, toggleWish, count, total, say }}>{children}{msg && <div className="toast" role="status">{msg}</div>}</Ctx.Provider>
+}
+
+function Img({ src, alt }: { src: string; alt: string }) {
+  const [bad, setBad] = useState(false)
+  return bad ? <div className="ph" role="img" aria-label={alt}>{alt.charAt(0)}</div> : <img src={src} alt={alt} loading="lazy" onError={() => setBad(true)} />
+}
+
+function Qty({ v, set }: { v: number; set: (n: number) => void }) {
+  return <div className="qty"><button type="button" aria-label="Decrease quantity" onClick={() => set(Math.max(1, v - 1))}>−</button><span>{v}</span><button type="button" aria-label="Increase quantity" onClick={() => set(v + 1)}>+</button></div>
+}
+
+function Header() {
+  const { count } = useStore(); const nav = useNavigate()
+  const [open, setOpen] = useState(false); const [dd, setDd] = useState(false); const [q, setQ] = useState('')
+  const go = (e: FormEvent) => { e.preventDefault(); nav(`/products?q=${encodeURIComponent(q)}`) }
+  return <header className="hdr">
+    <div className="info"><span>Bulk Orders &amp; Special Pricing</span><span>Genuine &amp; Certified Products</span><span>Dedicated Business Support</span><span className="sp">Call: +91 98765 43210</span><span>sales@mrt-enterprises.in</span></div>
+    <div className="bar">
+      <Link to="/" className="logo"><i>M+</i><span><b>MRT-ENTERPRISES</b><small>HEALTHCARE WHOLESALE</small></span></Link>
+      <form className="search" onSubmit={go} role="search"><input aria-label="Search products" placeholder="Search for medical products, brands, or categories..." value={q} onChange={e => setQ(e.target.value)} /><button aria-label="Search">⌕</button></form>
+      <button className="burger" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>☰</button>
+      <nav className={'nav' + (open ? ' open' : '')} onClick={() => { setOpen(false); setDd(false) }}>
+        <NavLink to="/" end>Home</NavLink>
+        <div className="dd"><button onClick={e => { e.stopPropagation(); setDd(!dd) }} aria-expanded={dd}>Categories ▾</button>
+          {dd && <div className="menu">{CATEGORIES.map(c => <Link key={c} to={`/products?category=${encodeURIComponent(c)}`}>{c}</Link>)}<Link to="/categories"><b>All categories →</b></Link></div>}</div>
+        <NavLink to="/products">Products</NavLink><NavLink to="/orders">Orders</NavLink><NavLink to="/login">Sign In</NavLink>
+        <Link to="/cart" className="cart" aria-label={`Cart, ${count} items`}>Cart <em>{count}</em></Link>
+      </nav>
+    </div>
+  </header>
+}
+
+const WHY = [['◆', 'Wide Product Range', `${products.length}+ essential medical products`], ['%', 'Attractive Bulk Pricing', 'Save more on large orders'], ['⛟', 'Reliable & On-Time Delivery', 'Pan India shipping support'], ['✓', 'Trusted by Healthcare Businesses', 'Clinics, hospitals & diagnostic centers']]
+
+function Hero() {
+  const { say } = useStore()
+  return <section className="top">
+    <div className="hero"><div className="copy">
+      <small className="eyebrow">YOUR PARTNER IN BETTER CARE</small>
+      <h1>Healthcare Supplies Delivered <em>Smarter.</em></h1>
+      <p>Trusted medical products at wholesale prices for hospitals, clinics and healthcare businesses.</p>
+      <div className="ctas"><Link className="btn" to="/products">Shop Products</Link><button className="btn ghost" onClick={() => say('Demo only: quote requests are not sent anywhere.')}>Request a Quote</button></div>
+      <ul className="trust">{['Quality Assured', 'Bulk Pricing', 'Pan India Delivery', 'Business Support'].map(t => <li key={t}>✓ {t}</li>)}</ul></div>
+      <div className="collage">{products.slice(0, 3).map(p => <Img key={p.id} src={p.image} alt={p.name} />)}</div></div>
+    <aside className="why"><h2>Why Choose MRT-ENTERPRISES?</h2><ul>{WHY.map(([i, t, d]) => <li key={t}><span>{i}</span><div><b>{t}</b><small>{d}</small></div></li>)}</ul></aside>
+  </section>
+}
+
+
+function CatCard({ c, onPick }: { c: string; onPick?: () => void }) {
+  const n = products.filter(p => p.category === c).length
+
+  
+const categoryImageMap: Record<string, string> = {
+  'Patient Monitoring Equipment': 'patient-care',
+  'Diagnostic Imaging Equipment': 'diagnostic-equipment',
+  'Critical Care & Respiratory Equipment': 'respiratory-care',
+  'Surgical & Operation Theatre Equipment': 'surgical-instruments',
+  'Laboratory & Diagnostic Equipment': 'lab-supplies',
+  'Hospital Furniture & Patient Care': 'patient-care',
+  'Sterilization & Infection Control': 'disinfection-and-hygiene',
+  'Infusion & Drug Delivery Equipment': 'medical-devices',
+  'General Medical & Examination Equipment': 'diagnostic-equipment',
+  'Emergency & Trauma Care': 'wound-care',
+  'Medical Consumables & Disposables': 'hospital-consumables',
+  'Medical Oxygen Systems': 'respiratory-care',
+  'Others': 'others',
+}
+
+
+  const imageName = categoryImageMap[c] || 'others'
+
+  return (
+    <Link
+      className="cat"
+      to={`/products?category=${encodeURIComponent(c)}`}
+      onClick={onPick}
+    >
+      <Img src={`/categories/${imageName}.webp`} alt={c} />
+      <b>{c}</b>
+      <small>{n} Products</small>
+    </Link>
+  )
+}
+
+
+function CatModal({ onClose }: { onClose: () => void }) {
+  return <div className="modal" role="dialog" aria-modal="true" aria-label="Select a category"><button className="x" aria-label="Close" onClick={onClose}>✕</button><h2>Select a Category</h2><div className="catgrid">{CATEGORIES.map(c => <CatCard key={c} c={c} onPick={onClose} />)}</div></div>
+}
+
+function CategorySection() {
+  const [m, setM] = useState(false)
+  return <section className="sec"><div className="sh"><h2>Shop by Category <small>Explore our complete range of medical supplies</small></h2><button className="link" onClick={() => setM(true)}>View All Categories →</button></div>
+    <div className="strip">{CATEGORIES.map(c => <CatCard key={c} c={c} />)}</div>{m && <CatModal onClose={() => setM(false)} />}</section>
+}
+
+function ProductCard({ p, list }: { p: Product; list?: boolean }) {
+  const s = useStore(); const [q, setQ] = useState(1); const w = s.wish.includes(p.id)
+  return <article className={'pc' + (list ? ' list' : '')}>
+    {p.inStock !== undefined && <span className={'stock' + (p.inStock ? '' : ' out')}>{p.inStock ? 'In Stock' : 'Out of Stock'}</span>}
+    <button className="heart" aria-label="Toggle wishlist" aria-pressed={w} onClick={() => s.toggleWish(p.id)}>{w ? '♥' : '♡'}</button>
+    <Link to={`/products/${p.id}`} className="pimg"><Img src={p.image} alt={p.name} /></Link>
+    <div className="pb"><small>{p.category}</small><h3><Link to={`/products/${p.id}`}>{p.name}</Link></h3><p>{p.description}</p>
+      <b className="price">{inr(p.price)}{p.price > 0 && <span> / {p.unit}</span>}</b>
+      <div className="buy"><Qty v={q} set={setQ} /><button className="btn sm" onClick={() => s.add(p.id, q)}>Add to Cart</button></div></div>
+  </article>
+}
+
+const MAX = Math.max(1, ...products.map(p => p.price))
+const HAS_STOCK = products.some(p => p.inStock !== undefined)
+
+function Products() {
+  const [sp] = useSearchParams(); const q = (sp.get('q') || '').toLowerCase(); const cp = sp.get('category')
+  const [cats, setCats] = useState<string[]>(cp ? [cp] : [])
+  useEffect(() => { setCats(cp ? [cp] : []) }, [cp])
+  const [max, setMax] = useState(MAX); const [stock, setStock] = useState(false); const [sort, setSort] = useState('pop'); const [list, setList] = useState(false); const [drawer, setDrawer] = useState(false)
+  const cmp: Record<string, (a: Product, b: Product) => number> = { pop: () => 0, lh: (a, b) => a.price - b.price, hl: (a, b) => b.price - a.price, az: (a, b) => a.name.localeCompare(b.name) }
+  const r = products.filter(p => (!cats.length || cats.includes(p.category)) && (!q || (p.name + p.description + p.category + (p.brand || '')).toLowerCase().includes(q)) && p.price <= max && (!stock || p.inStock)).sort(cmp[sort])
+  return <div className="shop">
+    <aside className={'side' + (drawer ? ' open' : '')}><h3>Filters</h3>
+      <fieldset><legend>Category</legend>{CATEGORIES.map(c => <label key={c}><input type="checkbox" checked={cats.includes(c)} onChange={() => setCats(x => x.includes(c) ? x.filter(y => y !== c) : [...x, c])} /> {c} ({products.filter(p => p.category === c).length})</label>)}</fieldset>
+      {HAS_STOCK && <fieldset><legend>Availability</legend><label><input type="checkbox" checked={stock} onChange={e => setStock(e.target.checked)} /> In stock only</label></fieldset>}
+      <fieldset><legend>Max price: {inr(max)}</legend><input type="range" min={0} max={MAX} value={max} onChange={e => setMax(+e.target.value)} aria-label="Maximum price" /></fieldset>
+      <button className="btn sm close" onClick={() => setDrawer(false)}>Show {r.length} results</button></aside>
+    <section><div className="tb"><h2>{cats.length === 1 ? cats[0] : 'All Products'} <small>Showing {r.length} products</small></h2>
+      <div className="tools"><button className="btn sm fbtn" onClick={() => setDrawer(true)}>Filters</button>
+        <label>Sort by: <select value={sort} onChange={e => setSort(e.target.value)}><option value="pop">Popularity</option><option value="lh">Price: Low to High</option><option value="hl">Price: High to Low</option><option value="az">Name A–Z</option></select></label>
+        <button className={'tg' + (!list ? ' on' : '')} aria-label="Grid view" onClick={() => setList(false)}>▦</button><button className={'tg' + (list ? ' on' : '')} aria-label="List view" onClick={() => setList(true)}>☰</button></div></div>
+      {r.length ? <div className={'grid' + (list ? ' list' : '')}>{r.map(p => <ProductCard key={p.id} p={p} list={list} />)}</div> : <p className="empty">No products match your filters.</p>}</section>
+  </div>
+}
+
+function Home() {
+  return <><Hero /><CategorySection /><section className="sec"><div className="sh"><h2>Featured Products</h2><Link className="link" to="/products">View all →</Link></div><div className="grid">{products.slice(0, 6).map(p => <ProductCard key={p.id} p={p} />)}</div></section></>
+}
+
+function Categories() { return <div className="page"><h1>All Categories</h1><div className="catgrid">{CATEGORIES.map(c => <CatCard key={c} c={c} />)}</div></div> }
+
+function Details() {
+  const { id } = useParams(); const s = useStore(); const [q, setQ] = useState(1); const p = products.find(x => x.id === id)
+  if (!p) return <div className="page"><h1>Product not found</h1><Link className="btn" to="/products">Back to products</Link></div>
+  return <div className="page"><div className="detail"><div className="big"><Img src={p.image} alt={p.name} /></div>
+    <div><small>{p.category}</small><h1>{p.name}</h1><p>Item ID: {p.id}{p.brand ? ` · ${p.brand}` : ''}</p><p>{p.description}</p>
+      <b className="price lg">{inr(p.price)}{p.price > 0 && <span> / {p.unit}</span>}</b><small>Demo price. Not a verified quotation.</small>
+      <div className="buy"><Qty v={q} set={setQ} /><button className="btn" onClick={() => s.add(p.id, q)}>Add to Cart</button></div></div></div>
+    <h2>Related products</h2><div className="grid">{products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 6).map(x => <ProductCard key={x.id} p={x} />)}</div></div>
+}
+
+function Cart() {
+  const s = useStore(); const rows = products.filter(p => s.cart[p.id])
+  if (!rows.length) return <div className="page"><h1>Your cart is empty</h1><Link className="btn" to="/products">Browse products</Link></div>
+  return <div className="page"><h1>Cart</h1><div className="cartwrap"><div>{rows.map(p => <div className="row" key={p.id}><Img src={p.image} alt={p.name} /><div><b>{p.name}</b><small>{inr(p.price)} / {p.unit}</small></div><Qty v={s.cart[p.id]} set={n => s.setQty(p.id, n)} /><b>{inr(p.price * s.cart[p.id])}</b><button className="link" onClick={() => s.remove(p.id)}>Remove</button></div>)}</div>
+    <aside className="sum"><h3>Summary</h3><p>Subtotal <b>{inr(s.total)}</b></p><small>Demo prices. Taxes and delivery not included.</small><Link className="btn" to="/checkout">Checkout</Link></aside></div></div>
+}
+
+const FIELDS: [string, string, string][] = [['name', 'Contact name', 'text'], ['business', 'Business name (optional)', 'text'], ['phone', 'Mobile number', 'tel'], ['email', 'Email', 'email'], ['address', 'Delivery address', 'text'], ['pin', 'PIN code', 'text']]
+
+function Checkout() {
+  const [err, setErr] = useState<Record<string, string>>({}); const [done, setDone] = useState(false)
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); const f = new FormData(e.currentTarget); const g = (k: string) => String(f.get(k) || '').trim(); const x: Record<string, string> = {}
+    if (!g('name')) x.name = 'Enter contact name'
+    if (!/^[6-9]\d{9}$/.test(g('phone'))) x.phone = 'Enter a valid 10-digit mobile number'
+    if (!/^\S+@\S+\.\S+$/.test(g('email'))) x.email = 'Enter a valid email'
+    if (!g('address')) x.address = 'Enter delivery address'
+    if (!/^\d{6}$/.test(g('pin'))) x.pin = 'Enter a 6-digit PIN code'
+    setErr(x); setDone(!Object.keys(x).length)
+  }
+  return <div className="page narrow"><h1>Checkout</h1><form onSubmit={submit} noValidate>{FIELDS.map(([k, l, t]) => <label key={k}>{l}<input name={k} type={t} aria-invalid={!!err[k]} />{err[k] && <em className="err">{err[k]}</em>}</label>)}<button className="btn">Place demo order</button></form>
+    {done && <p className="note" role="status">Demo only: details look valid, but no order was placed or sent anywhere.</p>}</div>
+}
+
+function Auth({ reg }: { reg?: boolean }) {
+  const [m, setM] = useState('')
+  return <div className="page narrow"><h1>{reg ? 'Register' : 'Sign In'}</h1><form onSubmit={(e: FormEvent) => { e.preventDefault(); setM('Demo only: no authentication is implemented.') }}>
+    {reg && <label>Full name<input required /></label>}<label>Email<input type="email" required /></label><label>Password<input type="password" required /></label><button className="btn">{reg ? 'Create account' : 'Sign In'}</button></form>
+    {m && <p className="note" role="status">{m}</p>}<p>{reg ? <Link to="/login">Already registered? Sign in</Link> : <Link to="/register">New here? Register</Link>}</p></div>
+}
+
+function Orders() { return <div className="page"><h1>Orders</h1><p className="empty">Demo page: order history is not connected to any system.</p><Link className="btn" to="/products">Start shopping</Link></div> }
+
+export default function App() {
+  return <Provider><Header /><main><Routes>
+    <Route path="/" element={<Home />} /><Route path="/products" element={<Products />} /><Route path="/products/:id" element={<Details />} />
+    <Route path="/categories" element={<Categories />} /><Route path="/cart" element={<Cart />} /><Route path="/checkout" element={<Checkout />} />
+    <Route path="/login" element={<Auth />} /><Route path="/register" element={<Auth reg />} /><Route path="/orders" element={<Orders />} /><Route path="*" element={<Home />} />
+  </Routes></main><footer className="foot">© MRT-ENTERPRISES · Healthcare Wholesale · Demo storefront: prices and details are samples.</footer></Provider>
+}
