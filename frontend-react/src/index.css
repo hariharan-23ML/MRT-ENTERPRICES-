@@ -1,0 +1,25 @@
+:root{
+  --blue:#283dc1;--vio:#4251d9;--mag:#b23ed5;--navy:#11154a;--lav:#f3f1ff;--bd:#e6e3f5;
+  --grad:linear-gradient(110deg,#283dc1,#4251d9 45%,#b23ed5);
+  --grad-soft:linear-gradient(135deg,#eef0ff 0%,#f6efff 100%);
+  --bg:#f7f7fc;--card:#fff;--ink:#11154a;--muted:#5f648f;--faint:#8a8eb3;
+  --ok:#0f8a4b;--ok-bg:#dcf6e8;--bad:#c0261a;--bad-bg:#fde4e1;
+  --r-sm:10px;--r:16px;--r-lg:22px;
+  --sh-1:0 1px 2px rgba(17,21,74,.05),0 1px 3px rgba(17,21,74,.06);
+  --sh-2:0 18px 40px -18px rgba(40,61,193,.35),0 4px 12px -4px rgba(17,21,74,.08);
+  --sh-3:0 30px 80px -20px rgba(17,21,74,.35);
+  --ring:0 0 0 4px rgba(66,81,217,.16);
+  --gut:max(24px,calc((100% - 1440px)/2 + 24px));
+  --head:'Plus Jakarta Sans',Inter,system-ui,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
+#root{min-height:100vh;display:flex;flex-direction:column}#root>main{flex:1}
+img{max-width:100%}a{color:inherit;text-decoration:none}a:hover{color:inherit}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+h1,h2,h3{margin:0;font-family:var(--head);font-weight:700;letter-spacing:-.015em;line-height:1.2}fieldset{border:0;padding:0;margin:0 0 16px}
+input,select,textarea{font:inherit;color:inherit}
+input[type=checkbox],input[type=radio],input[type=range]{accent-color:var(--vio)}
+:focus-visible{outline:2px solid var(--vio);outline-offset:2px;border-radius:6px}
+::selection{background:#4251d933}
